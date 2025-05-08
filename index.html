@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FreedomNET — Alternative DNS Network</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(to right, #141e30, #243b55);
+      color: white;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    header {
+      background-color: #0f1626;
+      padding: 2rem;
+      text-align: center;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 2.5rem;
+    }
+    main {
+      flex: 1;
+      padding: 2rem;
+      max-width: 800px;
+      margin: auto;
+    }
+    section {
+      margin-bottom: 2rem;
+    }
+    h2 {
+      color: #66fcf1;
+      margin-bottom: 0.5rem;
+    }
+    .dns-box {
+      background: #1f2833;
+      padding: 1rem;
+      border-left: 4px solid #66fcf1;
+      font-size: 1.2rem;
+      margin-top: 0.5rem;
+    }
+    footer {
+      text-align: center;
+      padding: 1rem;
+      background: #0b0c10;
+      color: #aaa;
+    }
+    a {
+      color: #66fcf1;
+      text-decoration: none;
+    }
+    .lang-switcher {
+      text-align: right;
+      margin-bottom: 1rem;
+    }
+    .lang-switcher button {
+      background: none;
+      color: #66fcf1;
+      border: 1px solid #66fcf1;
+      padding: 0.3rem 0.6rem;
+      margin-left: 0.5rem;
+      cursor: pointer;
+    }
+  </style>
+  <script>
+    const content = {
+      ru: {
+        title: "FreedomNET",
+        subtitle: "Независимая и открытая DNS-сеть",
+        what: "Что такое FreedomNET?",
+        whatText: "FreedomNET — это независимая DNS-сеть, использующая dnsmasq и предлагающая альтернативные доменные зоны, такие как .geek, .op, .lm, .pelmeni и другие.",
+        why: "Зачем альтернативный DNS?",
+        whyText: "Традиционная корневая зона DNS ограничена и централизована. FreedomNET открывает пространство для креативного, культурного и технического самовыражения через доменные имена.",
+        connect: "Как подключиться",
+        connectText: "Чтобы использовать FreedomNET, укажите следующий DNS-сервер в настройках вашей системы:",
+        highlight: "Лучшие по нашему мнению TLD",
+        tlds: [
+          ".ukr — Украина",
+          ".rus — Россия",
+          ".op — неизвестное значение",
+          ".geek — компьютерщики и IT-культура",
+          ".femboy — гендерная и интернет-самобытность",
+          ".gq — Экваториальная Гвинея",
+          ".est — Эстония"
+        ]
+      },
+      uk: {
+        title: "FreedomNET",
+        subtitle: "Незалежна та відкрита DNS-мережа",
+        what: "Що таке FreedomNET?",
+        whatText: "FreedomNET — це незалежна DNS-мережа, що використовує dnsmasq та пропонує альтернативні доменні зони, такі як .geek, .op, .lm, .pelmeni та інші.",
+        why: "Навіщо альтернативний DNS?",
+        whyText: "Традиційна коренева зона DNS обмежена та централізована. FreedomNET відкриває простір для творчого, культурного та технічного самовираження через домени.",
+        connect: "Як підключитись",
+        connectText: "Щоб використовувати FreedomNET, вкажіть наступний DNS-сервер у налаштуваннях системи:",
+        highlight: "Найкращі TLD на нашу думку",
+        tlds: [
+          ".ukr — Україна",
+          ".rus — Росія",
+          ".op — невідоме значення",
+          ".geek — айтішники та гіки",
+          ".femboy — гендерна та інтернет-ідентичність",
+          ".gq — Екваторіальна Гвінея",
+          ".est — Естонія"
+        ]
+      },
+      pl: {
+        title: "FreedomNET",
+        subtitle: "Niezależna i otwarta sieć DNS",
+        what: "Czym jest FreedomNET?",
+        whatText: "FreedomNET to niezależna sieć DNS oparta na dnsmasq, oferująca alternatywne domeny najwyższego poziomu jak .geek, .op, .lm, .pelmeni i inne.",
+        why: "Po co alternatywny DNS?",
+        whyText: "Tradycyjna strefa DNS jest ograniczona i scentralizowana. FreedomNET otwiera przestrzeń do kreatywności, wyrazu kulturowego i technicznego poprzez domeny.",
+        connect: "Jak się połączyć",
+        connectText: "Aby korzystać z FreedomNET, ustaw poniższy serwer DNS w konfiguracji systemu:",
+        highlight: "Nasze ulubione domeny TLD",
+        tlds: [
+          ".ukr — Ukraina",
+          ".rus — Rosja",
+          ".op — nieznane znaczenie",
+          ".geek — informatycy i entuzjaści",
+          ".femboy — tożsamość płciowa i internetowa",
+          ".gq — Gwinea Równikowa",
+          ".est — Estonia"
+        ]
+      }
+    };
+
+    function switchLang(lang) {
+      const t = content[lang];
+      document.getElementById("title").textContent = t.title;
+      document.getElementById("subtitle").textContent = t.subtitle;
+      document.getElementById("what").textContent = t.what;
+      document.getElementById("whatText").textContent = t.whatText;
+      document.getElementById("why").textContent = t.why;
+      document.getElementById("whyText").textContent = t.whyText;
+      document.getElementById("connect").textContent = t.connect;
+      document.getElementById("connectText").textContent = t.connectText;
+      document.getElementById("highlight").textContent = t.highlight;
+      const list = document.getElementById("tldList");
+      list.innerHTML = "";
+      t.tlds.forEach(item => {
+        const li = document.createElement("li");
+        li.textContent = item;
+        list.appendChild(li);
+      });
+    }
+  </script>
+</head>
+<body onload="switchLang('ru')">
+  <header>
+    <h1 id="title">FreedomNET</h1>
+    <p id="subtitle">Независимая и открытая DNS-сеть</p>
+  </header>
+  <main>
+    <div class="lang-switcher">
+      <button onclick="switchLang('ru')">Рус</button>
+      <button onclick="switchLang('uk')">Укр</button>
+      <button onclick="switchLang('pl')">Pol</button>
+    </div>
+
+    <section>
+      <h2 id="what">Что такое FreedomNET?</h2>
+      <p id="whatText">FreedomNET — это независимая DNS-сеть...</p>
+    </section>
+
+    <section>
+      <h2 id="why">Зачем альтернативный DNS?</h2>
+      <p id="whyText">Традиционная корневая зона DNS ограничена...</p>
+    </section>
+
+    <section>
+      <h2 id="connect">Как подключиться</h2>
+      <p id="connectText">Чтобы использовать FreedomNET...</p>
+      <div class="dns-box">178.234.10.58</div>
+    </section>
+
+    <section>
+      <h2 id="highlight">Лучшие по нашему мнению TLD</h2>
+      <ul id="tldList">
+        <li>.ukr — Украина</li>
+        <li>.rus — Россия</li>
+        <li>.op — неизвестное значение</li>
+        <li>.geek — компьютерщики и IT-культура</li>
+        <li>.femboy — гендерная и интернет-самобытность</li>
+        <li>.gq — Экваториальная Гвинея</li>
+        <li>.est — Эстония</li>
+      </ul>
+    </section>
+  </main>
+  <footer>
+    <p>FreedomNET &copy; 2025. Not affiliated with ICANN. Built for freedom of expression and innovation.</p>
+  </footer>
+</body>
+</html>
